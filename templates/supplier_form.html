@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% if supplier %}
+            Edit Supplier
+        {% else %}
+            Add Supplier
+        {% endif %}
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f1f5f9;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            min-height: 100vh;
+        }
+
+        .form-box {
+            width: 550px;
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #1e293b;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 7px;
+
+            font-weight: bold;
+            color: #334155;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 11px;
+
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+
+            font-size: 15px;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        textarea {
+            height: 90px;
+            resize: vertical;
+        }
+
+        .required {
+            color: red;
+        }
+
+        .message {
+            background: #fee2e2;
+            color: #991b1b;
+
+            padding: 10px;
+            border-radius: 6px;
+
+            margin-bottom: 15px;
+        }
+
+        .buttons {
+            margin-top: 25px;
+        }
+
+        .save-btn {
+            background: #2563eb;
+            color: white;
+
+            border: none;
+            padding: 12px 20px;
+
+            border-radius: 6px;
+            cursor: pointer;
+
+            font-size: 15px;
+        }
+
+        .save-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .cancel-btn {
+            display: inline-block;
+
+            background: #e2e8f0;
+            color: #334155;
+
+            padding: 12px 20px;
+            margin-left: 8px;
+
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .cancel-btn:hover {
+            background: #cbd5e1;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="form-box">
+
+    {% if supplier %}
+
+        <h2>Edit Supplier</h2>
+
+        <div class="subtitle">
+            Update supplier information
+        </div>
+
+    {% else %}
+
+        <h2>Add Supplier</h2>
+
+        <div class="subtitle">
+            Enter the supplier details
+        </div>
+
+    {% endif %}
+
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="message">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <label>
+            Supplier Name <span class="required">*</span>
+        </label>
+
+        <input
+            type="text"
+            name="name"
+            value="{{ supplier.name|default:'' }}"
+            placeholder="Enter supplier name"
+            required
+        >
+
+
+        <label>
+            Phone Number <span class="required">*</span>
+        </label>
+
+        <input
+            type="text"
+            name="phone"
+            value="{{ supplier.phone|default:'' }}"
+            placeholder="Enter phone number"
+            required
+        >
+
+
+        <label>
+            Email
+        </label>
+
+        <input
+            type="email"
+            name="email"
+            value="{{ supplier.email|default:'' }}"
+            placeholder="Enter email address"
+        >
+
+
+        <label>
+            Address
+        </label>
+
+        <textarea
+            name="address"
+            placeholder="Enter supplier address"
+        >{{ supplier.address|default:'' }}</textarea>
+
+
+        <div class="buttons">
+
+            <button
+                type="submit"
+                class="save-btn">
+
+                {% if supplier %}
+                    Update Supplier
+                {% else %}
+                    Save Supplier
+                {% endif %}
+
+            </button>
+
+            <a
+                href="{% url 'supplier_list' %}"
+                class="cancel-btn">
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>

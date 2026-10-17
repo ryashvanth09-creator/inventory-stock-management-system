@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Delete Product</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f1f5f9;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            min-height: 100vh;
+        }
+
+        .delete-box {
+            width: 500px;
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .product-name {
+            color: #1e293b;
+            font-size: 18px;
+            font-weight: bold;
+
+            margin: 20px 0;
+        }
+
+        .warning {
+            background: #fef2f2;
+            color: #b91c1c;
+
+            padding: 12px;
+
+            border-radius: 6px;
+
+            margin-bottom: 25px;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+
+            border: none;
+
+            padding: 12px 20px;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+
+        .cancel-btn {
+            display: inline-block;
+
+            margin-left: 10px;
+
+            background: #e2e8f0;
+            color: #334155;
+
+            padding: 12px 20px;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+        }
+
+        .cancel-btn:hover {
+            background: #cbd5e1;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="delete-box">
+
+    <div class="icon">
+        ⚠️
+    </div>
+
+    <h2>Delete Product</h2>
+
+    <p>
+        Are you sure you want to delete this product?
+    </p>
+
+    <div class="product-name">
+        {{ product.name }}
+    </div>
+
+    <p>
+        SKU: {{ product.sku }}
+    </p>
+
+    <div class="warning">
+        This action cannot be undone.
+    </div>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <button
+            type="submit"
+            class="delete-btn">
+            Yes, Delete
+        </button>
+
+        <a
+            href="{% url 'product_list' %}"
+            class="cancel-btn">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>

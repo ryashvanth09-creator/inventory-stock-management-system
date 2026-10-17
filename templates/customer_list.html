@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customers - Inventory System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f1f5f9;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 230px;
+            height: 100vh;
+            background: #1e293b;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 25px 15px;
+        }
+
+        .sidebar h2 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+        }
+
+        .sidebar a:hover {
+            background: #334155;
+            color: white;
+        }
+
+        .sidebar .active {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 230px;
+            padding: 30px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .top-bar h1 {
+            margin: 0;
+            color: #1e293b;
+        }
+
+        .add-btn {
+            background: #2563eb;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .add-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* Messages */
+        .message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        /* Table */
+        .table-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+            text-align: left;
+            padding: 13px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .edit-btn {
+            background: #f59e0b;
+            color: white;
+            padding: 7px 12px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+            padding: 7px 12px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .empty {
+            text-align: center;
+            color: #64748b;
+            padding: 25px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+
+    <h2>📦 Inventory</h2>
+
+    <a href="{% url 'dashboard' %}">
+        Dashboard
+    </a>
+
+    <a href="{% url 'product_list' %}">
+        Products
+    </a>
+
+    <a href="{% url 'category_list' %}">
+        Categories
+    </a>
+
+    <a href="{% url 'supplier_list' %}">
+        Suppliers
+    </a>
+
+    <a href="{% url 'customer_list' %}" class="active">
+        Customers
+    </a>
+
+    <a href="#">
+        Stock In
+    </a>
+
+    <a href="#">
+        Stock Out
+    </a>
+
+    <a href="#">
+        Reports
+    </a>
+
+    <a href="{% url 'logout' %}">
+        Logout
+    </a>
+
+</div>
+
+
+<!-- Main Content -->
+<div class="main-content">
+
+    <div class="top-bar">
+
+        <h1>Customers</h1>
+
+        <a href="{% url 'customer_add' %}" class="add-btn">
+            + Add Customer
+        </a>
+
+    </div>
+
+
+    <!-- Messages -->
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="message">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- Customer Table -->
+    <div class="table-box">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Customer Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Actions</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for customer in customers %}
+
+                    <tr>
+
+                        <td>{{ customer.id }}</td>
+
+                        <td>
+                            <strong>{{ customer.name }}</strong>
+                        </td>
+
+                        <td>
+                            {{ customer.phone }}
+                        </td>
+
+                        <td>
+
+                            {% if customer.email %}
+                                {{ customer.email }}
+                            {% else %}
+                                -
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if customer.address %}
+                                {{ customer.address }}
+                            {% else %}
+                                -
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="{% url 'customer_edit' customer.id %}"
+                                class="edit-btn">
+                                Edit
+                            </a>
+
+                            <a
+                                href="{% url 'customer_delete' customer.id %}"
+                                class="delete-btn">
+                                Delete
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="6" class="empty">
+                            No customers found. Click "+ Add Customer" to add your first customer.
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

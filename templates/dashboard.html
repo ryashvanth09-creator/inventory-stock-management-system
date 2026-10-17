@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Inventory Management</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            width: 240px;
+            height: 100vh;
+
+            background: #0f172a;
+            padding: 25px 15px;
+        }
+
+        .logo {
+            color: white;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo h2 {
+            margin-top: 8px;
+        }
+
+        .sidebar a {
+            display: block;
+
+            color: #cbd5e1;
+            text-decoration: none;
+
+            padding: 13px 15px;
+            margin-bottom: 7px;
+
+            border-radius: 7px;
+        }
+
+        .sidebar a:hover {
+            background: #1e293b;
+            color: white;
+        }
+
+        .sidebar .active {
+            background: #2563eb;
+            color: white;
+        }
+
+
+        /* MAIN AREA */
+
+        .main {
+            margin-left: 240px;
+            padding: 30px;
+        }
+
+
+        /* TOP BAR */
+
+        .topbar {
+            background: white;
+
+            padding: 20px 25px;
+
+            border-radius: 10px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .topbar p {
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .user {
+            background: #eff6ff;
+            padding: 10px 15px;
+            border-radius: 7px;
+        }
+
+
+        /* DASHBOARD CARDS */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+            repeat(auto-fit, minmax(190px, 1fr));
+
+            gap: 20px;
+
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 10px;
+
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .card-icon {
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .card h2 {
+            font-size: 30px;
+        }
+
+
+        /* LOW STOCK TABLE */
+
+        .table-box {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 10px;
+
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .table-box h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+        }
+
+        th,
+        td {
+            text-align: left;
+
+            padding: 14px;
+
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .low-stock {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .safe {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+
+        /* LOGOUT */
+
+        .logout {
+            margin-top: 25px !important;
+            color: #fca5a5 !important;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <div class="logo">
+
+        <div style="font-size: 35px;">
+            📦
+        </div>
+
+        <h2>Inventory</h2>
+
+    </div>
+
+
+    <a class="active"
+       href="{% url 'dashboard' %}">
+
+        🏠 Dashboard
+
+    </a>
+
+
+    <a href="{% url 'product_list' %}">
+    📦 Products
+</a>
+
+
+    <a href="{% url 'category_list' %}">
+    🗂 Categories
+</a>
+
+   <a href="{% url 'supplier_list' %}">Suppliers</a>
+
+   <a href="{% url 'customer_list' %}">Customers</a>
+
+    <a href="{% url 'stock_in_list' %}">Stock In</a>
+
+   <a href="{% url 'stock_out_list' %}">Stock Out</a>
+
+   <a href="{% url 'reports' %}">Reports</a>
+
+    <a class="logout"
+       href="{% url 'logout' %}">
+
+        🚪 Logout
+
+    </a>
+
+</div>
+
+
+
+<!-- MAIN CONTENT -->
+
+<div class="main">
+
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+        <div>
+
+            <h1>Dashboard</h1>
+
+            <p>
+                Inventory & Stock Management System
+            </p>
+
+        </div>
+
+
+        <div class="user">
+
+            👤 Welcome,
+            <strong>
+                {{ request.user.username }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- CARDS -->
+
+    <div class="cards">
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                📦
+            </div>
+
+            <p>Total Products</p>
+
+            <h2>
+                {{ total_products }}
+            </h2>
+
+        </div>
+
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                📊
+            </div>
+
+            <p>Total Stock</p>
+
+            <h2>
+                {{ total_stock }}
+            </h2>
+
+        </div>
+
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                🗂
+            </div>
+
+            <p>Categories</p>
+
+            <h2>
+                {{ total_categories }}
+            </h2>
+
+        </div>
+
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                🚚
+            </div>
+
+            <p>Suppliers</p>
+
+            <h2>
+                {{ total_suppliers }}
+            </h2>
+
+        </div>
+
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                👥
+            </div>
+
+            <p>Customers</p>
+
+            <h2>
+                {{ total_customers }}
+            </h2>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- LOW STOCK -->
+
+    <div class="table-box">
+
+        <h2>
+            ⚠️ Low Stock Products
+        </h2>
+
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>Product</th>
+
+                <th>SKU</th>
+
+                <th>Quantity</th>
+
+                <th>Status</th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+            {% for product in low_stock_products %}
+
+            <tr>
+
+                <td>
+                    {{ product.name }}
+                </td>
+
+                <td>
+                    {{ product.sku }}
+                </td>
+
+                <td>
+                    {{ product.quantity }}
+                </td>
+
+                <td class="low-stock">
+                    ⚠ Low Stock
+                </td>
+
+            </tr>
+
+
+            {% empty %}
+
+
+            <tr>
+
+                <td colspan="4"
+                    style="text-align:center;">
+
+                    No low stock products.
+
+                </td>
+
+            </tr>
+
+
+            {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

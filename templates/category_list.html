@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Categories | Inventory Management</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        /* Sidebar */
+
+        .sidebar {
+            position: fixed;
+            width: 240px;
+            height: 100vh;
+            background: #0f172a;
+            padding: 25px 15px;
+        }
+
+        .logo {
+            color: white;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo h2 {
+            margin-top: 8px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 13px 15px;
+            margin-bottom: 7px;
+            border-radius: 7px;
+        }
+
+        .sidebar a:hover {
+            background: #1e293b;
+            color: white;
+        }
+
+        .sidebar .active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .logout {
+            margin-top: 25px;
+            color: #fca5a5 !important;
+        }
+
+
+        /* Main Content */
+
+        .main {
+            margin-left: 240px;
+            padding: 30px;
+        }
+
+
+        /* Top Header */
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            background: white;
+            padding: 22px 25px;
+
+            border-radius: 10px;
+            margin-bottom: 25px;
+
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .header h1 {
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #64748b;
+        }
+
+
+        /* Add Button */
+
+        .add-btn {
+            background: #2563eb;
+            color: white;
+
+            padding: 12px 18px;
+
+            text-decoration: none;
+
+            border-radius: 7px;
+
+            font-weight: bold;
+        }
+
+        .add-btn:hover {
+            background: #1d4ed8;
+        }
+
+
+        /* Messages */
+
+        .message {
+            background: #dcfce7;
+            color: #166534;
+
+            padding: 13px;
+
+            margin-bottom: 20px;
+
+            border-radius: 7px;
+        }
+
+
+        /* Table */
+
+        .table-box {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 10px;
+
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .table-box h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+        }
+
+        th,
+        td {
+            text-align: left;
+
+            padding: 14px;
+
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+
+        /* Buttons */
+
+        .edit-btn {
+            display: inline-block;
+
+            background: #f59e0b;
+            color: white;
+
+            padding: 7px 12px;
+
+            text-decoration: none;
+
+            border-radius: 5px;
+
+            margin-right: 5px;
+        }
+
+        .delete-btn {
+            display: inline-block;
+
+            background: #dc2626;
+            color: white;
+
+            padding: 7px 12px;
+
+            text-decoration: none;
+
+            border-radius: 5px;
+        }
+
+        .edit-btn:hover {
+            background: #d97706;
+        }
+
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+
+
+        /* Empty table */
+
+        .empty {
+            text-align: center;
+
+            padding: 30px;
+
+            color: #64748b;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <div class="logo">
+
+        <div style="font-size:35px;">
+            📦
+        </div>
+
+        <h2>Inventory</h2>
+
+    </div>
+
+
+    <a href="{% url 'dashboard' %}">
+        🏠 Dashboard
+    </a>
+
+
+    <a href="#">
+        📦 Products
+    </a>
+
+
+    <a class="active"
+       href="{% url 'category_list' %}">
+
+        🗂 Categories
+
+    </a>
+
+
+    <a href="#">
+        🚚 Suppliers
+    </a>
+
+
+    <a href="#">
+        👥 Customers
+    </a>
+
+
+    <a href="#">
+        ➕ Stock In
+    </a>
+
+
+    <a href="#">
+        ➖ Stock Out
+    </a>
+
+
+    <a href="#">
+        📊 Reports
+    </a>
+
+
+    <a class="logout"
+       href="{% url 'logout' %}">
+
+        🚪 Logout
+
+    </a>
+
+</div>
+
+
+
+<!-- MAIN CONTENT -->
+
+<div class="main">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div>
+
+            <h1>Categories</h1>
+
+            <p>
+                Manage product categories
+            </p>
+
+        </div>
+
+
+        <a class="add-btn"
+           href="{% url 'category_add' %}">
+
+            + Add Category
+
+        </a>
+
+    </div>
+
+
+
+    <!-- SUCCESS / ERROR MESSAGES -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="message">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+
+    <!-- CATEGORY TABLE -->
+
+    <div class="table-box">
+
+        <h2>Category List</h2>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Category Name</th>
+
+                    <th>Description</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+            {% for category in categories %}
+
+
+                <tr>
+
+                    <td>
+
+                        {{ category.id }}
+
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            {{ category.name }}
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+
+                        {{ category.description|default:"-" }}
+
+                    </td>
+
+
+                    <td>
+
+
+                        <a
+                            class="edit-btn"
+
+                            href="{% url 'category_edit' category.id %}">
+
+                            Edit
+
+                        </a>
+
+
+                        <a
+                            class="delete-btn"
+
+                            href="{% url 'category_delete' category.id %}">
+
+                            Delete
+
+                        </a>
+
+
+                    </td>
+
+                </tr>
+
+
+            {% empty %}
+
+
+                <tr>
+
+                    <td
+                        colspan="4"
+                        class="empty">
+
+                        No categories added yet.
+
+                    </td>
+
+                </tr>
+
+
+            {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

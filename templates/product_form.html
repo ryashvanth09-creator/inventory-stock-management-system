@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% if product %}
+            Edit Product
+        {% else %}
+            Add Product
+        {% endif %}
+    </title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 30px;
+        }
+
+        .container {
+            width: 700px;
+        }
+
+        .form-box {
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 12px;
+
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .icon {
+            text-align: center;
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e293b;
+            margin-bottom: 7px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-group {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+
+            color: #334155;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+        }
+
+        input,
+        select {
+            width: 100%;
+
+            padding: 12px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+
+            background: white;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .buttons {
+            margin-top: 10px;
+
+            display: flex;
+
+            gap: 10px;
+        }
+
+        .save-btn {
+            background: #2563eb;
+            color: white;
+
+            border: none;
+
+            padding: 12px 20px;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .cancel-btn {
+            background: #e2e8f0;
+            color: #334155;
+
+            padding: 12px 20px;
+
+            border-radius: 6px;
+
+            text-decoration: none;
+        }
+
+        .cancel-btn:hover {
+            background: #cbd5e1;
+        }
+
+        .message {
+            background: #fee2e2;
+            color: #b91c1c;
+
+            padding: 12px;
+
+            border-radius: 6px;
+
+            margin-bottom: 20px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <div class="form-box">
+
+        <div class="icon">
+            📦
+        </div>
+
+
+        {% if product %}
+
+            <h1>Edit Product</h1>
+
+            <p class="subtitle">
+                Update product information
+            </p>
+
+        {% else %}
+
+            <h1>Add Product</h1>
+
+            <p class="subtitle">
+                Add a new product to your inventory
+            </p>
+
+        {% endif %}
+
+
+        <!-- ERROR / SUCCESS MESSAGES -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- PRODUCT NAME -->
+
+            <div class="form-group">
+
+                <label>
+                    Product Name *
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    value="{{ product.name|default:'' }}"
+                    placeholder="Example: HP Wireless Mouse"
+                    required
+                >
+
+            </div>
+
+
+            <div class="row">
+
+
+                <!-- SKU -->
+
+                <div class="form-group">
+
+                    <label>
+                        SKU / Product Code *
+                    </label>
+
+                    <input
+                        type="text"
+                        name="sku"
+                        value="{{ product.sku|default:'' }}"
+                        placeholder="Example: MOUSE001"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- CATEGORY -->
+
+                <div class="form-group">
+
+                    <label>
+                        Category *
+                    </label>
+
+                    <select name="category" required>
+
+                        <option value="">
+                            Select Category
+                        </option>
+
+
+                        {% for category in categories %}
+
+                            <option
+                                value="{{ category.id }}"
+
+                                {% if product.category.id == category.id %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                {{ category.name }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+
+                <!-- QUANTITY -->
+
+                <div class="form-group">
+
+                    <label>
+                        Initial Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        name="quantity"
+                        value="{{ product.quantity|default:0 }}"
+                        min="0"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- REORDER LEVEL -->
+
+                <div class="form-group">
+
+                    <label>
+                        Minimum Stock Level
+                    </label>
+
+                    <input
+                        type="number"
+                        name="reorder_level"
+                        value="{{ product.reorder_level|default:5 }}"
+                        min="0"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+
+                <!-- PURCHASE PRICE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Purchase Price (₹)
+                    </label>
+
+                    <input
+                        type="number"
+                        name="purchase_price"
+                        value="{{ product.purchase_price|default:0 }}"
+                        min="0"
+                        step="0.01"
+                        placeholder="500.00"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- SELLING PRICE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Selling Price (₹)
+                    </label>
+
+                    <input
+                        type="number"
+                        name="selling_price"
+                        value="{{ product.selling_price|default:0 }}"
+                        min="0"
+                        step="0.01"
+                        placeholder="700.00"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <button
+                    type="submit"
+                    class="save-btn">
+
+                    {% if product %}
+
+                        Update Product
+
+                    {% else %}
+
+                        Save Product
+
+                    {% endif %}
+
+                </button>
+
+
+                <a
+                    href="{% url 'product_list' %}"
+                    class="cancel-btn">
+
+                    Cancel
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
